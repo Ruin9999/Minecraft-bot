@@ -19,7 +19,7 @@ function stopEquip() {
 module.exports = {
     name : "equip",
     args: false,
-    description : "Start equipping whatever is being picked up.",
+    description : "Equip specified item.",
     usage : "Nil",
     start : startEquip,
     stop : stopEquip
