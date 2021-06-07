@@ -1,0 +1,37 @@
+{
+    "seeds" : {
+        "wheat" : "wheat_seeds",
+        "carrot" : "carrot",
+        "potato" : "potato",
+        "beetroot" : "beetroot_seeds",
+        "netherwart" : "nether_wart",
+        "cocoa" : "cocoa"
+    },
+
+    "farmland" : {
+        "wheat" : ["farmland"],
+        "carrot" : ["farmland"],
+        "potato" : ["farmland"],
+        "beetroot" : ["farmland"],
+        "netherwart" : ["soul_sand"],
+        "cocoa" : ["jungle_log"]
+    },
+
+    "farmables" : {
+        "wheat" : "wheat",
+        "carrot" : "carrot",
+        "potato" : "potato",
+        "beetroot" : "beetroot",
+        "netherwart" : "nether_wart",
+        "cocoa" : "cocoa"
+    },
+
+    "metadata" : {
+        "wheat" : 7,
+        "carrot" : 7,
+        "potato" : 7,
+        "beetroot" : 7,
+        "netherwart" : 3,
+        "cocoa" : 7
+    }
+}

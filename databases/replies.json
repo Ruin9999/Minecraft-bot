@@ -1,0 +1,6 @@
+{
+    "greeting" : ["Hello", "hello", "Hi", "hi", "Yo", "yo", "What's up", "what's up", "Good day", "good day", "Sup", "sup", "Heyyo", "heyyo"],
+    "accept" : ["Okay", "okay", "Sure", "sure", "Ok", "ok", "Alright", "alright", "Yes sir", "yes sir", "Right away", "right away"],
+    "deny" : ["No", "no", "Nah", "nah", "I can't do that", "i can't do that", "Sorry", "sorry"],
+    "goodbye" : ["Goodbye", "goodbye", "Bye", "bye", "Adios", "adios", "Godspeed", "godspeed", "Cheers", "cheers", "Cheerio", "cheerio", "So long", "so long"]
+}

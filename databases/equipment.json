@@ -1,0 +1,11 @@
+{
+    "sword" : "sword",
+    "pickaxe" : "pickaxe",
+    "shovel" : "shovel",
+    "hoe" : "hoe",
+    "shield" : "shield",
+    "helmet" : "helmet",
+    "chestplate" : "chestplate",
+    "leggings" : "leggings",
+    "boots" : "boots"
+}

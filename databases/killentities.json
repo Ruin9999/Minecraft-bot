@@ -1,0 +1,13 @@
+{
+    "cow" : "Cow",
+    "chicken" : "Chicken",
+    "rabbit" : "Rabbit",
+    "sheep" : "Sheep",
+    "enderman" : "Enderman",
+    "creeper" : "Creeper",
+    "zombie" : "Zombie",
+    "skeleton" : "Skeleton",
+    "wither" : "Wither skeleton",
+    "spider" : "Spider",
+    "slime" : "Slime"
+}
