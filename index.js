@@ -120,3 +120,6 @@ bot.on("physicsTick", () => {
     const command = client.commands.get("defend");
     command.defend();
 });
+
+
+test
