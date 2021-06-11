@@ -1,26 +1,55 @@
-//Function to tell the bot to pick up what is being thrown at it and swap out gear accordingly...
-//
-const EQUIPMENT = require("../../databases/equipment.json")
+const armorNames = {
+    "helmet" : "head",
+    "chestplate" : "torso",
+    "leggings" : "legs",
+    "boots" : "feet"
+}
 
-var bot;
+const destinations = {
+    "head" : "head",
+    "chest" : "torso",
+    "torso" : "torso",
+    "legs" : "legs",
+    "feet" : "feet",
+    "right" : "hand",
+    "left" : "off-hand"
+}
 
-function onCollect(collector, collected) {
+function startEquip(args, client, bot) {
+    if(args.length == 0) {
+        return "Invalid Arguments!";
+    }
+
+    try {
+        if(args.length == 1) { //The use didn't specify anything but the item to equip
+            var arguments = args.join("_");
+            
+            const dictKeys = Object.keys(armorNames); 
+            for(var i = 0; i < dictKeys.length; i++) {
+                if(!arguments.includes(dictKeys[i])) continue;
+                var item = bot.inventory.items().find(item => item.name.includes(arguments));
+                if(!item) return "I don't have that.";
+                bot.equip(item, armorNames[dictKeys[i]]);
+                console.log(item, armorNames[dictKeys[i]]);
+                return `Equipped \`${arguments}\``;
+            }
     
-}
-
-function startEquip(client, bot, message) {
-    bot.on("playerCollect", onCollect);
-}
-
-function stopEquip() {
-    bot.removeListener("playerCollect", onCollect);
+            //If its not armor that we want to equip, then lets make the bot hold the item.
+            var item = bot.inventory.items().find(item => item.name.includes(arguments));
+            if(!item) return "I don't have that.";
+            bot.equip(item, armorNames[dictKeys[i]]);
+            return `Equipped \`${arguments}\``;
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = {
     name : "equip",
-    args: false,
-    description : "Equip specified item.",
-    usage : "Nil",
+    args: true,
+    description : "Equip specified equipment",
+    usage : "<item name> / <item name> <helmet,chestplate,leggings,boots,right, left>",
     start : startEquip,
-    stop : stopEquip
+    stop : false
 }

@@ -1,9 +1,5 @@
-function startPong(client, bot, message) {
-    try {
-        message.channel.send("Ping!");
-    } catch (err) {
-        console.log(err);
-    }
+function startPong(client, bot) {
+    return "Pong!";
 }
 
 module.exports = {
@@ -11,5 +7,6 @@ module.exports = {
     args : false,
     description : "Replies with a ping!",
     usage : "Nil",
-    start : startPong
+    start : startPong,
+    stop : false
 }

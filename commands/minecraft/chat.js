@@ -1,6 +1,6 @@
-function onChat(args, client, bot, message) {
+function startChat(args, client, bot) {
     try {
-        if(!args.length) return;
+        if(!args.length) return "Invalid Arguments!";
         var sentence = args[0] + " ";
         for(var i = 1; i < args.length; i++) {
             sentence += args[i] + " ";
@@ -14,7 +14,8 @@ function onChat(args, client, bot, message) {
 module.exports = {
     name : "chat",
     args : true,
-    description : "Send a message on the minecraft server.",
+    description : "Makes the bot type something in chat.",
     usage : "<message>",
-    start : onChat
+    start : startChat,
+    stop : false
 }

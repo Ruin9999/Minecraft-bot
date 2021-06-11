@@ -1,4 +1,3 @@
-const Movements = require("mineflayer-pathfinder").Movements;
 const Goals = require("mineflayer-pathfinder").goals;
 
 const attack = require("./attack.js");
@@ -7,7 +6,6 @@ var isFishing;
 
 function moveToFishingPos(fishingPos) {
     try {
-        bot.pathfinder.setMovements(new Movements(bot, bot.mcData));
         bot.pathfinder.setGoal(new Goals.GoalBlock(fishingPos.x, fishingPos.y, fishingPos.z));
     } catch (err) {
         console.log(err);

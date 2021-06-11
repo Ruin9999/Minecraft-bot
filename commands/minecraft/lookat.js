@@ -1,16 +1,15 @@
-function startLooking(args, client, bot, message) {
+function startLooking(args, client, bot) {
     try {
         if(args.length != 1) {
-            message.channel.send("Invalid arguments!");
-            return;
+            return ("Invalid arguments!");
         }
-        var target = bot.players[args[0]].entity;
+        var target = bot.players[args[0]];
         if(!target) {
-            message.channel.send(`Cannot find \`${args[0]}\`...`);
+            return (`Cannot find \`${args[0]}\`...`);
         } else if (target) {
-            const pos = target.position;
+            const pos = target.entity.position;
             bot.lookAt(pos, true);
-            message.channel.send(`Looking at \`${args[0]}\`...`);
+            return (`Looking at \`${args[0]}\`...`);
         }
     } catch (err) {
         console.log(err);
@@ -22,5 +21,6 @@ module.exports = {
     args: true,
     description : "Look at the block that a specified player is standing on.",
     usage : "<username>",
-    start : startLooking
+    start : startLooking,
+    stop : false
 }

@@ -1,10 +1,9 @@
 const fs = require("fs")
 
-function startHelp(args, client, bot, message) {
+function startHelp(args, client, bot) {
     try {
         if(args.length > 1) {
-            message.channel.send("Invalid arguments!");
-            return;
+            return "Invalid Arugments!";
         };
         if(args.length != 1) { //If no arguments
             var commandNames = [];
@@ -18,11 +17,11 @@ function startHelp(args, client, bot, message) {
                 }
             }
 
-            message.channel.send(commandNames.toString);
+            return (commandNames.toString);
         } else {
             const command = client.commands.get(args[0]);
-            if(!command) message.channel.send("No such command!");
-            message.channel.send(`Command : \`${command.name}\` \nUsage : \`${command.usage}\``);
+            if(!command) return ("No such command!");
+            return (`Command : \`${command.name}\` \nUsage : \`${command.usage}\``);
         }
         
     } catch (err) {
@@ -35,5 +34,6 @@ module.exports = {
     args : true,
     description : "Describes how to use a certain function",
     usage : "<command name>",
-    start : startHelp
+    start : startHelp,
+    stop : false
 }

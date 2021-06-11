@@ -8,115 +8,150 @@ const bloodhoundPlugin = require("mineflayer-bloodhound")(mineflayer);
 const mineflayerViewer = require('prismarine-viewer').mineflayer
 const tool = require("mineflayer-tool").plugin;
 
+const Movements = require("mineflayer-pathfinder").Movements;
 const discord = require("discord.js");
 const fs = require('fs');
 
-const { botUsername, botPassword, server, serverPort, discordToken, discordPrefix ,channelId} = require("./config.json"); //Account details
 
-const botOptions = {
-    username : botUsername,
-    password : botPassword,
-    host : server,
-    port : serverPort
+try { //Scripting starts here
+    var usingDiscord;
+    var {botUsername, botPassword, server, serverPort, discordToken, discordPrefix} = require("./config.json");
+    if(!serverPort) serverPort = 25565;
+    const options = {
+        username : botUsername,
+        password : botPassword,
+        host : server,
+        port : serverPort
+    }
+
+    if(!discordToken) usingDiscord = false;
+    else usingDiscord = true;//If we don't have a token for the bot to login to, we don't use discord at all.
+
+    var bot = startBot(options);
+    var client = startDiscord();
+
+    client = loadCommands(client);
+    bot = loadEvents(client, bot);
+
+    if(usingDiscord) {
+        client.login(discordToken);
+    }
+
+    if(usingDiscord) { //If we're using discord, listen to the channel if not listen to the minecraft chat.
+        client.on("message", message => {
+            if (!message.content.startsWith(discordPrefix) || message.author.bot) return; //If its a message without our prefix or is a message sent by the bot, ignore.
+            var funcRet = commandHandler(usingDiscord, message, client, bot);
+            if(funcRet) message.channel.send(funcRet);
+        })
+    } else if (!usingDiscord) {
+        bot.on("chat", (username, message) => {
+            if(!message.includes(bot.username) || username == bot.username) return; //If the message either doesn't contain bot's name or is a message sent by the bot, ignore.
+            var funcRet = commandHandler(usingDiscord, message, client, bot);
+            if(funcRet) bot.chat(funcRet);
+        })
+    }
+
+    bot.once("spawn", () => {mineflayerViewer(bot, { port: 3007, firstPerson: false });});
+
+    bot.on("physicsTick", () => {
+        client.commands.get("attack").attack();
+        client.commands.get("defend").defend();
+    })
+
+} catch (err) {
+    console.log(err);
 }
 
-//Create bot
-const bot = mineflayer.createBot(botOptions);
 
-if(!bot) return;
+//Functions down here.
+function commandHandler(usingDiscord, message, client, bot) {
+    var args;
+    var commandName;
+    if(usingDiscord) { //If we are using discord to command the bot.
+        args = message.content.slice(discordPrefix.length).trim().split(/ +/); 
+        commandName = args.shift().toLowerCase(); 
 
-//Load plugins onto the bot
-bloodhoundPlugin(bot);
-bot.loadPlugin(pathfinder);
-bot.loadPlugin(collectBlock);
-bot.loadPlugin(armorManager);
-bot.loadPlugin(pvp);
-bot.loadPlugin(tool);
+        if(!client.commands.has(commandName)) {
+            message.channel.send("No such command");
+            return;
+        }
 
-//Configuring bot
-bot.bloodhound.yaw_correlation_enabled = true;
+        var funcRet = executeCommand(commandName, args, client, bot);
+        if(funcRet) return funcRet;
 
-//Starting up the discord bot
-const client = new discord.Client();
-client.commands = new discord.Collection();
+    } else { //If we are using the minecraft chat instead.
+        args = message.slice(bot.username.length).trim().split(/ +/);
+        commandName = args.shift().toLowerCase();
 
-//Loading functions
-const commandFolders = fs.readdirSync("./commands"); //Loading up commands
-for(const folder of commandFolders) {
-    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
-    for(const file of commandFiles) {
-        const command = require(`./commands/${folder}/${file}`);
-        client.commands.set(command.name, command);
+        console.log(args);
+        console.log(commandName);
+
+        if(!client.commands.has(commandName)) {
+            bot.chat("No such command");
+            return;
+        }
+
+        var funcRet = executeCommand(commandName, args, client, bot);
+        if(funcRet) return funcRet;
     }
 }
 
-//Load minecraft and discord events
-const mcEvents = fs.readdirSync("./events");
-for(const folder of mcEvents) {
-    const eventFiles = fs.readdirSync(`./events/${folder}`).filter(file => file.endsWith(".js"));
-    for(const file of eventFiles) {
-        const event = require(`./events/${folder}/${file}`);
-        if(folder == "minecraft") {
+function startDiscord() { //If we are using discord, log in the bot, if not just initialize the command collection
+    const client = new discord.Client();
+    client.commands = new discord.Collection();
+    return client;
+}
+
+function startBot(options) {
+    const bot = mineflayer.createBot(options);
+    bot.loadPlugin(pathfinder);
+    bot.loadPlugin(collectBlock);
+    bot.loadPlugin(armorManager);
+    bot.loadPlugin(pvp);
+    bot.loadPlugin(tool);
+
+    bot.pathfinder.setMovements(new Movements(bot, bot.mcData));
+
+    bloodhoundPlugin(bot);
+    bot.bloodhound.yaw_correlation_enabled = true;
+    return bot;
+}
+
+function loadCommands(client) {
+    const commandFolders = fs.readdirSync("./commands");
+    for(const folder of commandFolders) {
+        const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
+        for(const file of commandFiles) {
+            const command = require(`./commands/${folder}/${file}`);
+            client.commands.set(command.name, command);
+        }
+    }
+    return client;
+}
+
+function loadEvents(client, bot) {
+    const mcEvents = fs.readdirSync("./events");
+    for(const folder of mcEvents) {
+        const eventFiles = fs.readdirSync(`./events/${folder}`).filter(file => file.endsWith(".js"));
+        for(const file of eventFiles) {
+            const event = require(`./events/${folder}/${file}`);
             if(event.once) {
                 bot.once(event.name, (...args) => event.start(...args, client, bot));
             } else {
                 bot.on(event.name, (...args) => event.start(...args, client, bot));
             }
-        } else if (folder == "discord") {
-            if(event.once) {
-                client.once(event.name, (...args) => event.start(...args, client, bot));
-            } else {
-                client.on(event.name, (...args) => event.start(...args, client, bot));
-            }
         }
     }
+    return bot;
 }
 
-client.login(discordToken);
-
-//Bot scripting
-client.on("message" , message => { //Command handler
-    try {
-        if (!message.content.startsWith(discordPrefix) || message.author.bot) return;
-
-        const args = message.content.slice(discordPrefix.length).trim().split(/ +/);
-        const commandName = args.shift().toLowerCase(); 
-
-        if(!client.commands.has(commandName)) { 
-            message.channel.send("No such command");
-            return;
-        };
-
-        const command = client.commands.get(commandName);
-        console.log("Commmand : " + commandName);
-        if(command.args === false) {
-            var error = command.start(client, bot, message);
-            if(error) {
-                console.log(error);
-                message.channel.send(error);
-            }
-        } else {
-            var error = command.start(args, client, bot, message);
-            if(error) {
-                console.log(error);
-                message.channel.send(error);
-            }
-        }
-    } catch (err) {
-        console.log(err);
+function executeCommand(commandName, args, client, bot) {
+    const command = client.commands.get(commandName);
+    if(command.args) { //If the command takes in arguments
+        var funcRet = command.start(args, client, bot);
+        if(funcRet) return funcRet;
+    } else {
+        var funcRet = command.start(client, bot);
+        if(funcRet) return funcRet;
     }
-})
-
-bot.once("spawn", () => {
-    mineflayerViewer(bot, { port: 3007, firstPerson: false })
-  })
-
-
-bot.on("physicsTick", () => {
-    const command = client.commands.get("attack");
-    command.attack();
-});
-bot.on("physicsTick", () => { 
-    const command = client.commands.get("defend");
-    command.defend();
-});
+}

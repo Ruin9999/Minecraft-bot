@@ -1,17 +1,17 @@
-function startFacing(args, client, bot, message) {
+function startFacing(args, client, bot) {
     try {
         if(args.length != 1) {
-            message.channel.send("Invalid arguments!");
-            return;
+            return ("Invalid arguments!");
         };
-        var target = bot.players[args].entity;
-        console.log(target);
+        if(args == bot.username) return;
+
+        var target = bot.players[args];
         if(!target) {
-            //Start looking for entities
+            return (`\`${args}\` cannot be found.`);
         } else if (target) {
-            const pos = target.position.offset(0,1,0);
+            const pos = target.entity.position.offset(0,1,0);
             bot.lookAt(pos, true);
-            message.channel.send(`Facing \`${args}\`...`);
+            return(`Facing \`${args}\`...`);
         }
     } catch (err) {
         console.log(err);
@@ -23,5 +23,6 @@ module.exports = {
     args: true,
     description : "Turn and face the direction of a certain player.",
     usage : "<username>",
-    start : startFacing
+    start : startFacing,
+    stop : false
 }

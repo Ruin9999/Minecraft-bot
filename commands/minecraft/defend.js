@@ -1,29 +1,32 @@
 var bot;
 var radius;
-var message;
 var username;
 var isDefending;
 
-function startDefending(args, client, B, M) {
-    if(args.length < 1 || args.length > 1) {
-        M.channel.send("Invalid arguments!");
-        return;
+function startDefending(args, client, B) {
+    try {
+        bot = B;
+
+        if(args.length < 1 || args.length > 1) {
+            return "Invalid Arguments!";
+        }
+    
+        if(!bot.players[args[0]]) {
+            return (`\`${args[0]}\` cannot be found.`);
+        };
+    
+        username = args[0];
+        radius = 16;
+        if(args.length == 2) {
+            radius = args[1];
+        }
+        isDefending = true;
+    } catch (err) {
+        console.log(err);
     }
-    if(!bot.players[args[0]]) {
-        M.channel.send(`\`${args[0]}\` cannot be found.`);
-        return;
-    };
-    username = args[0];
-    radius = 16;
-    if(args.length == 2) {
-        radius = args[1];
-    }
-    bot = B;
-    message = M;
-    isDefending = true;
 }
 
-function stopDefending() {
+function stopDefending(args, client, bot) {
     isDefending = false;
 }
 
@@ -41,8 +44,7 @@ function defend() {
                 bot.pvp.attack(target);
             }        
         } else {
-            if(!message) return;
-            message.channel.send("Stopped defending...");
+            return ("Stopped Defending")
         }
     } catch (err) {
         console.log(err)

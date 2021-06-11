@@ -1,7 +1,7 @@
-function startQuit(client, bot, message) {
+function startQuit(client, bot) {
     try {
         bot.quit();
-        message.channel.send("Quit the server!");
+        return ("Quit the server!");
     } catch (err) {
         console.log(err);
     }

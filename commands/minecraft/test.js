@@ -5,5 +5,6 @@ function onTest(client, bot) {
 module.exports = {
     name : "test",
     args: false,
-    start : onTest
+    start : onTest,
+    stop : false
 }

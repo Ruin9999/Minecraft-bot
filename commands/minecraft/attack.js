@@ -3,35 +3,30 @@ const KILLENTITIES = require("../../databases/killentities.json")
 var mob;
 var bot;
 var radius;
-var message;
 var isAttacking = false;
 
-function start(args, client, B, M) {
+function startAttacking(args, client, B) {
     try {
         if(args.length < 1 || args.length > 2) {
-            message.channel.send("Invalid arguments!");
-            return;
+            return "Invalid Arguments!";
         }
         mob = args[0];
         radius = 16;
         bot = B;
-        message = M;
         if(args.length == 2) {
             radius = args[1];
         }
-        message.channel.send(`Attacking \`${mob}\` with a radius of \`${radius}\``);
-        isAttacking = true
+
+        isAttacking = true;
+        return(`Attacking \`${mob}\` with a radius of \`${radius}\``);
+
     } catch (err) {
         console.log(err);
     }
 }
 
-function stop() {
-    try {
-        isAttacking = false;
-    } catch (err) {
-        console.log(err);
-    }
+function stopAttacking(args, client, bot) {
+    isAttacking = false;
 }
 
 function attack() {
@@ -39,7 +34,7 @@ function attack() {
         if(isAttacking) {
             const dictKeys = Object.keys(KILLENTITIES);
             for(var i = 0; i < dictKeys.length; i++) {
-                if(!mob.includes(dictKeys[i])) continue; //If message doesn't include one of the predefined items.
+                if(!mob.includes(dictKeys[i])) continue;
                 const filter = e => e.position.distanceTo(bot.entity.position) < radius && e.mobType === KILLENTITIES[dictKeys[i]];
                 const target = bot.nearestEntity(filter);
                 if(target) {
@@ -54,8 +49,7 @@ function attack() {
                 }
             }
         } else {
-            if(!message) return;
-            message.channel.send("Stopped attacking...");
+            return "Stopped Attacking...";
         }
     } catch (err) {
         console.log(err);
@@ -83,8 +77,8 @@ module.exports = {
     args: true,
     description : "Attack specified mob within a certain radius.",
     usage : "<mob> <radius>",
-    start : start,
-    stop : stop,
+    start : startAttacking,
+    stop : stopAttacking,
     attack : attack,
     retaliate : retaliate
 }

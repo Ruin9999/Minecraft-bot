@@ -14,7 +14,7 @@ function start(args, client, B, message) {
     }
 }
 
-function stop() {
+function stop(args, client, bot) {
     try {
         mining = false;
     } catch (err) {

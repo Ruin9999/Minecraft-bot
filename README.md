@@ -10,6 +10,9 @@ A few things to setup before the bot can be used.
 
 2. Inside the file add this and fill in the values accordingly.
 
+Note:
+    If you want to command the bot via minecraft chat, just don't include the discord token in the config file.
+
 ```json
 
 "botUsername": "<value>",
@@ -23,7 +26,7 @@ A few things to setup before the bot can be used.
 
 ## Commands
 
-All commands are handled through discord.
+Commands can be either handled through a discord channel or through normal minecraft chat.
 
 ### Discord 
 
@@ -67,10 +70,10 @@ Commands for the minecraft bot.
     Usage: defend <username> <radius>
     Description: Start defending the player from mobs
 
-4. Equip (WIP)
+4. Equip
     Command name: equip
-    Usage: equip <item name>
-    Description: equips a specified item
+    Usage: equip <item name> / <item name> <helmet,chestplate,leggings,boots,right, left>
+    Description: equips a specified equipment
 
 5. Face
     Command name: face
@@ -97,10 +100,10 @@ Commands for the minecraft bot.
     Usage: goto <username>
     Description: Go to where a player is
 
-10. Hump (WIP)
-    Command name: hump 
-    Usage: hump
-    Description: Start crouching rapidly
+10. Dance (WIP)
+    Command name: dance 
+    Usage: dance
+    Description: Start dancing?
 
 11. Look at
     Command name: lookAt
@@ -122,8 +125,8 @@ Commands for the minecraft bot.
     Usage: toss <item> <amount>
     Description: Toss an item from inventory
 
-15. Unequip (WIP)
+15. Unequip
     Command name: unequip
-    Usage: unequip <destination>
+    Usage: unequip <helmet,chestplate,leggings,boots,right, left>
     Description: unequip whatever is equipped at the destination
 ```
