@@ -1,4 +1,3 @@
-const vec3 = require("vec3");
 const mineflayer = require("mineflayer");
 const pathfinder = require("mineflayer-pathfinder").pathfinder;
 const collectBlock = require("mineflayer-collectblock").plugin;
@@ -8,7 +7,6 @@ const bloodhoundPlugin = require("mineflayer-bloodhound")(mineflayer);
 const mineflayerViewer = require('prismarine-viewer').mineflayer
 const tool = require("mineflayer-tool").plugin;
 
-const Movements = require("mineflayer-pathfinder").Movements;
 const discord = require("discord.js");
 const fs = require('fs');
 
@@ -109,8 +107,6 @@ function startBot(options) {
     bot.loadPlugin(armorManager);
     bot.loadPlugin(pvp);
     bot.loadPlugin(tool);
-
-    bot.pathfinder.setMovements(new Movements(bot, bot.mcData));
 
     bloodhoundPlugin(bot);
     bot.bloodhound.yaw_correlation_enabled = true;

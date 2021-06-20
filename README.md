@@ -28,9 +28,9 @@ Note:
 
 Commands can be either handled through a discord channel or through normal minecraft chat.
 
-### Discord 
+### Generic
 
-Commands for discord.
+Generic commands.
 
 ```json
 1. Help 
@@ -43,7 +43,12 @@ Commands for discord.
     Usage: ping
     Description: Pong!
 
-3. Reload
+3. Pong
+    Command name : pong
+    Usage: pong
+    Description: Ping!
+
+4. Reload
     Command name: reload
     Usage: reload <command name>
     Description: Used for rapid prototyping of commands during development
@@ -120,7 +125,7 @@ Commands for the minecraft bot.
     Usage: quit
     Description: Quit the minecraft server
 
-14. Toss (WIP)
+14. Toss 
     Command name: toss
     Usage: toss <item> <amount>
     Description: Toss an item from inventory

@@ -1,5 +1,5 @@
 function startPong(client, bot) {
-    return "Pong!";
+    return "Ping!";
 }
 
 module.exports = {
