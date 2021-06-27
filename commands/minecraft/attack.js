@@ -32,20 +32,16 @@ function stopAttacking(args, client, bot) {
 function attack() {
     try {
         if(isAttacking) {
-            const dictKeys = Object.keys(KILLENTITIES);
-            for(var i = 0; i < dictKeys.length; i++) {
-                if(!mob.includes(dictKeys[i])) continue;
-                const filter = e => e.position.distanceTo(bot.entity.position) < radius && e.mobType === KILLENTITIES[dictKeys[i]];
-                const target = bot.nearestEntity(filter);
-                if(target) {
-                    const sword = bot.inventory.items().find(item => item.name.includes("sword"));
-                    if(sword) {
-                        bot.equip(sword, "hand", () => {
-                            bot.pvp.attack(target);
-                        });
-                    } else {
+            const filter = e => e.position.distanceTo(bot.entity.position) < radius && e.mobType === mob;
+            const target = bot.nearestEntity(filter);
+            if(target) {
+                const sword = bot.inventory.items().find(item => item.name.includes("sword"));
+                if(sword) {
+                    bot.equip(sword, "hand", () => {
                         bot.pvp.attack(target);
-                    }
+                    });
+                } else {
+                    bot.pvp.attack(target);
                 }
             }
         } else {
