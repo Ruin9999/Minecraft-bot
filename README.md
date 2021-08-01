@@ -15,12 +15,14 @@ Note:
 
 ```json
 
+{
 "botUsername": "<value>",
 "botPassword": "<value>",
 "server": "<value>",
 "serverPort": <value>,
 "discordToken": "<value>",
 "discordPrefix": "<value>"
+}
 
 ```
 
