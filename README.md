@@ -137,3 +137,8 @@ Commands for the minecraft bot.
     Usage: unequip <helmet,chestplate,leggings,boots,right, left>
     Description: unequip whatever is equipped at the destination
 ```
+
+# Future Plans
+- [ ] Make the bot into a exe.
+- [ ] Allow us to see what the bot sees.
+- [ ] More complex automations?
